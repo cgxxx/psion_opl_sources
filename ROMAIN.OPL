@@ -1,0 +1,63 @@
+ROMAIN:
+LOCAL A%,MIL%,CEN%,DIX%,UN%,H$(255),M%,K$(1),L$(2),I%
+A:: CLOCK(1)
+UDG 0,2,31,2,8,31,8,0,31
+UDG 1,0,0,0,0,0,0,0,31
+AT 1,1 :PRINT CHR$(0);REPT$(CHR$(1),14);
+M%=MENUN(2,"Arabe En Romain,Romain En Arabe")
+IF M%=1 :GOTO B::
+ELSEIF M%=2 :GOTO C::
+ELSE STOP
+ENDIF
+B:: CLOCK(1) :AT 1,1 :PRINT REPT$(CHR$(1),15);
+AT 1,2 :PRINT"Chiffre : "; :INPUT A%
+IF A%=0 :GOTO A::
+ENDIF
+MIL%=(A%/1000)
+CEN%=(A%/100)-(MIL%*10)
+DIX%=(A%/10)-(MIL%*100+CEN%*10)
+UN%=A%-(MIL%*1000+CEN%*100+DIX%*10)
+H$=REPT$("M",MIL%)
+IF CEN%<4 :H$=H$+REPT$("C",CEN%)
+ELSEIF CEN%=4 :H$=H$+"CD"
+ELSEIF CEN%>4 AND CEN%<9 :H$=H$+"D"+REPT$("C",CEN%-5)
+ELSEIF CEN%=9 :H$=H$+"CM"
+ENDIF
+IF DIX%<4 :H$=H$+REPT$("X",DIX%)
+ELSEIF DIX%=4 :H$=H$+"XL"
+ELSEIF DIX%>4 AND DIX%<9 :H$=H$+"L"+REPT$("X",DIX%-5)
+ELSEIF DIX%=9 :H$=H$+"XC"
+ENDIF
+IF UN%<4 :H$=H$+REPT$("I",UN%)
+ELSEIF UN%=4 :H$=H$+"IV"
+ELSEIF UN%>4 AND UN%<9 :H$=H$+"V"+REPT$("I",UN%-5)
+ELSEIF UN%=9 :H$=H$+"IX"
+ENDIF
+VIEW(3,H$)
+GOTO A::
+C:: CLOCK(1) :AT 1,1 :PRINT REPT$(CHR$(1),15)
+KSTAT 1
+AT 1,2 :PRINT "Lettres : "; :INPUT H$
+IF H$="" :GOTO A::
+ENDIF
+I%=0 :A%=0
+WHILE I%<>LEN(H$)
+I%=I%+1
+K$=MID$(H$,I%,1)
+L$=MID$(H$,I%,2)
+IF K$="M" :A%=A%+1000
+ELSEIF K$="D" :A%=A%+500
+ELSEIF K$="C" :A%=A%+100
+ELSEIF K$="L" :A%=A%+50
+ELSEIF K$="X" :A%=A%+10
+ELSEIF K$="V" :A%=A%+5
+ELSEIF K$="I" :A%=A%+1
+ENDIF
+IF L$="CM" OR L$="CD" :A%=A%-200
+ELSEIF L$="XC" OR L$="XL" :A%=A%-20
+ELSEIF L$="IX" OR L$="IV" :A%=A%-2
+ENDIF
+ENDWH
+AT 1,3 :PRINT A%
+GET
+GOTO A::

@@ -1,0 +1,13 @@
+MDP%:(R%)
+local PA$(4),GA$(1),I%
+kstat 1
+CLS :AT 1,1 :PRINT "*** FILEPAK - DG ***"
+AT 1,2 :PRINT REPT$("-",20);
+AT 6,3 : print "Code :"
+while I%<4
+AT 12+I%,3 
+GA$=get$ :print "*";
+PA$=PA$+GA$ :I%=I%+1
+endwh
+if PA$<>"QIIW" :return 0
+else return 1 :endif

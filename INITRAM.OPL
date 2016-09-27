@@ -1,0 +1,31 @@
+INITRAM:
+local a%(11),A,g%
+debut::
+cls
+at 1,1 :print "1=PORTB  2=PORTC"
+at 1,2 :input a
+if a<>1 and a<>2
+goto debut::
+endif
+t::
+cls
+print "FORMAT O/N"
+g%=get
+if g%<>%N AND G%<>%O
+goto t::
+elseif g%=%N
+stop
+elseif g%=%O
+endif
+a%(1)=$4F37
+a%(2)=$3F62
+a%(3)=$3225
+a%(4)=$0036
+a%(5)=$4F36
+a%(6)=$30C6
+a%(7)=$013F
+a%(8)=$6131
+a%(9)=$334F
+a%(10)=$3F62
+a%(11)=$3900
+usR(addR(a%()),a)

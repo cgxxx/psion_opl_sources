@@ -1,0 +1,6 @@
+Q:(A$)
+LOCAL Z
+CLS :PRINT A$,CHR$(16);
+PRINT "       "; :INPUT Z
+CLS
+RETURN (Z)

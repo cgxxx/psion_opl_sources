@@ -1,0 +1,16 @@
+QUIT:
+LOCAL I%,J%,A$(20)
+CLS
+A$="* AU  REVOIR *"
+J%=1
+I%=50
+WHILE I%<=700
+BEEP 100,I%
+AT 3+J%,2 :PRINT MID$(A$,J%,1)
+AT 3+J%,3 :PRINT "*";
+I%=I%+50
+J%=J%+1
+ENDWH
+PAUSE 10
+CLS
+OFF

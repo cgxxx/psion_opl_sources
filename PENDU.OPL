@@ -1,0 +1,27 @@
+pendu:
+local C,l$(1),i,mr$(15),dg$(26)
+C:: CLS :print"mot reponse :" :input mr$
+dg$=""
+cls
+print rept$("-",len(mr$))
+A:: IF C=LEN(MR$) :PAUSE 50 :C=0 :GOTO C::
+ENDIF
+dg:: :beep 50,200
+at 1,2 :print  "lettre :"; :input l$
+if l$="" :stop
+elseif l$="*" :beep 50,200:cls :at 1,1:print "La reponse etait":at 1,2:print mr$ :pause 50 :goto c:: 
+endif
+I=1
+while i<len(dg$)+1
+if l$=mid$(dg$,i,1) :beep 50,200 :at 1,2 :print "'";l$;"' deja utilise":pause 50 :goto dg:: :endif
+i=i+1
+endwh
+DG$=dg$+l$
+i=1
+
+while i<len(mr$)+1
+if l$=mid$(mr$,i,1) :at i,1 :print l$ :C=C+1
+endif
+i=i+1
+endwh
+goto a::

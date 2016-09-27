@@ -1,0 +1,46 @@
+PIANO:
+LOCAL T%,dur%,f,N$(3),o
+kstat 1
+AT 1,1 :PRINT "* PIANO  * DG ";CHR$(38);" CG *"
+AT 1,2 :PRINT REPT$("-",20);
+dur%=100
+D::
+IF dur%>600 :dur%=100
+ELSEIF dur%<100 :dur%=600
+ENDIF
+at 1,3 :PRINT REPT$(" ",20);
+AT 1,3 :PRINT "Duree :";dur%
+T%=GET
+IF T%=%X :dur%=dur%+25 :GOTO D::
+ELSEIF T%=%R :dur%=dur%-25 :GOTO D::
+ENDIF
+IF T%=%A :f=478 :N$="DO" :o=0
+ELSEIF T%=%B :f=426 :N$="RE" :o=0
+ELSEIF T%=%C :f=379 :N$="MI" :o=0
+ELSEIF T%=%D :f=358 :N$="FA" :o=0
+ELSEIF T%=%E :f=319 :N$="SOL" :o=0
+ELSEIF T%=%F :f=284 :N$="LA" :o=0
+ELSEIF T%=%G :f=253 :N$="SI" :o=0
+ELSEIF T%=%H :f=239 :N$="DO" :o=1
+ELSEIF T%=%I :f=213 :N$="RE" :o=1
+ELSEIF T%=%J :f=190 :N$="MI" :o=1
+ELSEIF T%=%K :f=179 :N$="FA" :O=1
+ELSEIF T%=%L :f=159 :N$="SOL" :o=1
+ELSEIF T%=%M :f=142 :N$="LA" :o=1
+ELSEIF T%=%N :f=127 :N$="SI" :o=1
+ELSEIF T%=%O :f=119 :N$="DO" :o=2
+ELSEIF T%=%P :f=106 :N$="RE" :o=2
+ELSEIF T%=%Q :f=95 :N$="MI" :o=2
+ELSEIF T%=%S :f=89 :N$="FA" :o=2
+ELSEIF T%=%T :f=80 :N$="SOL" :o=2
+ELSEIF T%=%U :f=71 :N$="LA" :o=2
+ELSEIF T%=%V :f=63 :N$="SI" :o=2
+ELSEIF T%=%W :f=60 :N$="DO" :o=3
+ELSEIF T%=%Y :RETURN
+ELSEIF T%=%Z :return
+ELSE GOTO D:: 
+ENDIF
+BEEP dur%,f
+at 1,4 :print rept$(" ",20);
+AT 1,4 :PRINT "Note  :";N$ :at 14,4 :print "Oct. :";o
+GOTO D::

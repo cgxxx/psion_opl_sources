@@ -1,0 +1,13 @@
+RUNTIME:
+LOCAL M%,R%
+MENU1::
+CLS
+AT 1,1 :PRINT "*** FILEPAK - DG ***"
+AT 1,2 :PRINT REPT$("-",20);
+M%=menuN(1,"PERSO.,PROFES.,QUIT.")
+if M%=0 :return -1
+ELSEif M%=3 :stop
+elseif MDP%:(R%)=0 :stop
+elseif M%=1 :N$="PERSO" : P$="A"
+elseif M%=2 :N$="PROFES" :P$="A"
+endif

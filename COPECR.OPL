@@ -1,0 +1,56 @@
+COPECR:
+LOCAL IN%,d%,a%(23)
+A%(1)=$3F62
+A%(2)=$2521
+A%(3)=$CE00
+A%(4)=$005F
+A%(5)=$3F60
+A%(6)=$3F5D
+A%(7)=$C4FF
+A%(8)=$F721
+A%(9)=$88CE
+A%(10)=$0000
+A%(11)=$5F3F
+A%(12)=$60CE
+A%(13)=$2188
+A%(14)=$CC00
+A%(15)=$013F
+A%(16)=$6125
+A%(17)=$08CE
+A%(18)=$0000
+A%(19)=$39CE
+A%(20)=$00F6
+A%(21)=$39CE
+A%(22)=$00C0
+A%(23)=$3900
+IN%=MENU("COP,ECR,COPECR,FIN")
+if in%=1
+A%(7)=$C4DF
+ELSEIF IN%=2
+A%(7)=$C4F7
+ELSEIF IN%=3
+A%(7)=$C4D7
+ELSE
+RETURN
+ENDIF
+PRINT "PLACER LE PACK"
+print "   EN B:"
+PAUSE 40
+CLS
+PRINT "APPUYER SUR EXE"
+print "  POUR LANCER"
+in%=get
+if in%=13
+D%=USR(addr(a%()),1)
+cls
+if d%
+PRINT ERR$(d%)
+else
+cls
+print "   PACK B:"
+print "   PROTEGE"
+endif
+get
+endif
+RETURN
+

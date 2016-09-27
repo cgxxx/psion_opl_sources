@@ -1,0 +1,15 @@
+MODEIMP:
+local t%
+IF PEEKB($2099)<>255 :RETURN :ENDIF
+KSTAT 1
+deb::
+cls
+at 4,1 :print "CHOIX DU MODE"
+AT 1,2 :print rept$("-",20)
+at 3,3 :print "IMRIMANTE (O/N)";chr$(63)
+t%=get
+if t%=%O :imp=1 :beep 50,200
+AT 1,4 :PRINT "  IMPRESSION  OK" :PAUSE 10
+ELSEIF T%=%N :IMP=0 :AT 1,4 :PRINT "  PAS D IMPRESSION"
+beep 50,200 :PAUSE 50 :CLS :return (imp)
+endif
