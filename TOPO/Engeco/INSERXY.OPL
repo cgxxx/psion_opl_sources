@@ -1,0 +1,17 @@
+inserxy:
+DEB:: :CLS
+trouv=0
+KSTAT 3
+AT 1,1 :PRINT "No :";CHR$(63); :INPUT m$
+testpt:
+if trouv<>0 :beep 50,200 :at 1,4 :print"POINT DEJA EXISTANT" :pause 20 :goto deb:: :endif
+IF m$="" :CLS :RETURN :ENDIF
+PRINT "X  :";CHR$(63); :INPUT A.X$
+IF A.x$="" :return :endif
+PRINT "Y  :";CHR$(63); :INPUT A.Y$
+PRINT "Z  :";CHR$(63); :INPUT A.Z$
+a.n$=m$
+APPEND
+BEEP 50,200
+AT 3,4 :PRINT "POINT ENREGISTRE" :PAUSE 10   
+GOTO DEB::

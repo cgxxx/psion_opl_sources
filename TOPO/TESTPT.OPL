@@ -1,0 +1,12 @@
+TESTPT:
+FIRST
+while not eof
+find (M$)
+if a.n$=M$
+trouv=1 :goto r::
+ELSEIF A.n$<>m$ :trouv=0
+NEXT
+endif
+endwh
+r::
+RETURN (TROuV)

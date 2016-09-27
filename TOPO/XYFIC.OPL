@@ -1,0 +1,83 @@
+xyfic:
+REM * XYFIC (IMPLFIC) *
+REM ** DGX ** SEPT. 90 **
+IF DG=1 :DG=0 :GOTO CHEPOLE:: :ENDIF
+DEBUT:: :CLS :FIRST :KSTAT 3
+AT 1,1 :PRINT "* X/Y Avec Fichier *"
+at 1,2 :print REPT$("-",20);
+AT 1,3 :PRINT "No du Pole ";chr$(63);" "; :INPUT M$
+IF M$="" :GOTO CHEPOLE:: :ENDIF
+IF M$="0" :at 1,3 :print "X POLE ";chr$(63); :input x1
+at 1,4 :print "Y POLE ";chr$(63); :input y1
+goto pole:: :endif
+REM IF ERR :STOP :ENDIF
+WHILE NOT EOF
+FIND(M$)
+IF A.N$=M$
+X1=A.X :Y1=A.Y
+POLE:: :CLS :KSTAT 1
+AT 1,1 :PRINT "X POLE :";FIX$(X1,3,-11)
+AT 1,2 :PRINT "Y POLE :";FIX$(Y1,3,-11)
+BEEP 50,100
+GOTO SUIT::
+ELSE NEXT :ENDIF
+ENDWH
+IF EOF :PRINT CHR$(16); :PRINT "  POINT INEXISTANT" :PAUSE 20 :GOTO DEBUT:: :ENDIF
+SUIT::
+AT 1,3 :PRINT "Dist. si SP 0";CHR$(63);" "; :INPUT DIST
+IF DIST=0 
+AT 1,3 :PRINT"Distance SP ";CHR$(63); :INPUT DSP
+IF DSP=0 :GOTO CHEPOLE:: :ENDIF
+AT 1,4 :PRINT "Zenithal ";CHR$(63);" "; :INPUT zen1
+ZEN1=300-ZEN1 
+ZEN=ZEN1*PI/200
+DIST=ABS(DSP*(COS(ZEN)))
+ENDIF
+AT 1,3 :PRINT REPT$(" ",20)
+AT 1,3 :PRINT "Distance : ";FIX$(DIST,3,-8)
+AT 1,4 :PRINT "Gisement ";CHR$(63); :INPUT GIS
+GIS1=GIS*PI/200
+DX=SIN(GIS1)*DIST
+DY=COS(GIS1)*DIST
+X2=X1+DX :Y2=Y1+DY
+CLS
+AT 6,1 :PRINT "*** X.Y ***"
+AT 1,2 :PRINT "X POINT :";fix$(X2,3,-11)
+AT 1,3 :PRINT "Y POINT :";fix$(Y2,3,-11)
+AT 1,4 :PRINT CHR$(16);
+PAUSE 30
+ON:: :trouv=0 :KSTAT 1
+beep 50,200
+AT 1,4 :print "ENREG. DE CE PT O/N";chr$(63);
+stok::
+t%=get
+if t%=%O :KSTAT 3 :AT 1,4 :print "SOUS QUEL No: ";chr$(63);:input M$
+testpt:
+if trouv<>0 :beep 50,100 :at 1,4 :print "POINT DEJA EXISTANT" :pause 20 :goto on:: :endif
+IF m$="" :GOTO ON:: :ENDIF
+a.n$=m$ :a.x=x2 :a.y=y2 :append :beep 50,200 :at 1,4 :print rept$(" ",20) :AT 3,4 :print "ENREG. DU Pt ";a.n$ :pause 20 :goto fin::
+elseif t%=%N :goto fin::
+else :goto stok::
+endif
+fin::
+kstat 1
+beep 50,200
+AT 1,4 :PRINT "UN AUTRE CALCUL O/N"
+label::
+T%=GET
+IF T%=%O :GOTO CHEPOLE::
+ELSEIF T%=%N :CLOSE :topo:
+ELSE :GOTO LABEL::
+ENDIF
+CHEPOLE:: :DO :CLS
+PRINT "    *** X/Y ***"
+PRINT REPT$("-",20);
+M%=MENUN(2,"POLE,CHEMIN.,NOUVEAU,GIS/DIST,FIN")
+IF M%=5 :CLOSE :topo:
+ELSEIF M%=1 :GOTO POLE::
+ELSEIF M%=2 :X1=X2 :Y1=Y2 :X2=Y2=0 :GOTO POLE::
+ELSEIF M%=3 :GOTO DEBUT::
+ELSEIF M%=4 :DG=1 :GDFIC:
+ENDIF
+UNTIL 0
+

@@ -1,0 +1,113 @@
+ADAPTXY:
+local x(50),Y(50),XX(50),YY(50),xx,yy,dx,dxx,dy,dyy,n%,i%,a,b,p,q,r,d,xp,yp,x1,y1,t%
+if peekb($2099)<>255 :return :endif
+kstat 1
+CLS :BEEP 50,200 :PAUSE 5 :BEEP 50,100
+AT 1,1 :PRINT "* ADAPTATION - X Y *"
+AT 1,2 :PRINT "50 Pts de base MAXI." 
+AT 1,3 :PRINT REPT$("-",20)
+VIEW(4,"GUILLOUX Daniel * 06100 - Nice *")
+debut::
+cls :BEEP 50,200
+at 1,1 :print "* ADAPTATION - X Y *"
+at 1,2 :print rept$("=",20)
+at 4,3 :PRINT "Nbre pts base ";CHR$(63)
+at 9,4 :input n%
+IF n%=0 :return
+ELSEIF n%<3 OR N%>50 :BEEP 50,200 :goto debut:: :endif
+i%=1
+while i%<=n%
+deb::
+cls :BEEP 50,200
+at 1,1 :print "X Anc.  Pt ";i%;":"; :input x(i%)
+IF X(i%)=0 :RETURN :endif
+at 1,2 :print "Y Anc.  Pt ";i%;":"; :input Y(i%)
+at 1,3 :print "X Nouv. Pt ";i%;":"; :input xx(i%)
+at 1,4 :print "Y Nouv. Pt ";i%;":"; :input YY(i%)
+on::
+beep 50,200
+at 1,4 :print "OK O/N ";chr$(63);" "
+t%=get
+if t%=%N :goto deb::
+elseif t%=%O :goto suit::
+ELSE :goto on::
+endif
+suit::
+dxx=dxx+xx(i%)
+dyy=dyy+yy(i%)
+dx=dx+x(i%)
+dy=dy+y(i%)
+i%=i%+1
+endwh
+cls
+at 1,1 :print "* ADAPTATION - X Y *"
+at 1,2 :print rept$("=",20)
+at 1,3 :print "CALCULS EN COURS..."
+at 1,2 :print rept$("=",20)
+dx=dx/n%
+dy=dy/n%
+dxx=dxx/n%
+dyy=dyy/n%
+p=0 :q=0 :r=0
+i%=1
+while i%<=n%
+p=p+((y(i%)-dy)*(xx(i%)-dxx)-(x(i%)-dx)*(yy(i%)-dyy))
+q=q+((x(i%)-dx)*(xx(i%)-dxx)+(y(i%)-dy)*(yy(i%)-dyy))
+r=r+((x(i%)-dx)*(x(i%)-dx))+((y(i%)-dy)*(y(i%)-dy))
+i%=i%+1
+endwh
+a=p/r
+b=q/r
+i%=1
+while i%<=n%
+xx=dxx+a*(y(i%)-dy)+b*(x(i%)-dx)
+yy=dyy-a*(x(i%)-dx)+b*(y(i%)-dy)
+d=((xx-xx(i%))*(xx-xx(i%)))
+d=d+((yy-yy(i%))*(yy-yy(i%)))
+d=sqr(d)
+BEEP 50,200
+cls :beep 50,200
+AT 1,1 :print " CONTROLE POINT ";i%
+at 1,2 :print "X Calc.:";fix$(xx,3,-11)
+at 1,3 :print "Y Calc.:";fix$(YY,3,-11)
+at 1,4 :print "Ecart  :";fix$(D,3,-11)
+get
+i%=i%+1
+endwh
+pt::
+CLS :beep 50,200 
+at 1,1 :print "* ADAPTATION - X Y *"
+at 1,2 :print rept$("=",20)
+AT 1,3 :print "X Point :";chr$(63); :input xp
+if xp=0 :GOTO FIN:: :endif
+AT 1,4 :print "Y Point :";chr$(63); :input Yp
+x1=dxx+a*(yp-dy)+b*(xp-dx)
+y1=dyy-a*(xp-dx)+b*(yp-dy)
+CLS :beep 50,200 
+at 1,1 :print "X Anc. :";fix$(xP,3,-11)
+at 1,2 :print "Y Anc. :";fix$(YP,3,-11)
+at 1,3 :print "X Nouv.:";fix$(x1,3,-11)
+at 1,4 :print "Y Nouv.:";fix$(Y1,3,-11)
+get
+BEEP 50,200
+print rept$("=",20)
+print "UN AUTRE POINT O/N";chr$(63)
+on1:: :t%=get
+if t%=%N :goto fin::
+elseif t%=%O :goto pt::
+ELSE :beep 50,200 :goto on1::
+endif
+get
+goto pt::
+fin::
+cls :BEEP 50,200
+at 1,1 :print "* ADAPTATION - X Y *"
+at 1,2 :print rept$("=",20)
+at 1,3 :print "UN AUTRE CALCUL O/N";chr$(63)
+at 1,4 :print rept$("=",20)
+on2::
+t%=get
+if t%=%N :return
+elseif t%=%O :goto debut::
+ELSE :goto on2::
+endif

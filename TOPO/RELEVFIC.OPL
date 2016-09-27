@@ -1,0 +1,129 @@
+relevfic:
+REM  *RECOUPEMENT SUR FICHIER*
+REM * DGX ** OCT. 90*
+LOCAL A,B,C,DSP,I%,L1,L2,D,D1,D2,D3,DC,DX,DY,DX1,DY1,DX2,DY2,XX,YY,X1,X2,X,Y1,Y2,Y,G,G1,G2,GI,GIS,W,Z,V1,V2,V3,VV1,VV2,T%,ZEN,ZEN1,nf$(8),m$(8)
+IF PEEKB($2099)<>255 :RETURN :ENDIF
+IF NOT EXIST ("b:"+"bb") :topoimp: : endif
+fic:: :CLS
+at 1,1 :print " **  RECOUPEMENT  **"
+at 1,2 : print rept$("-",20)
+AT 2,3 :print "NOM DU FICHIER XY ";chr$(63)
+at 7,4 :input nf$
+if nf$="" :topo: :endif
+if not exist ("a:"+nf$) :beep 50,200 :at 3,4 :print "FICHIER INCONNU" :pause 20 :goto fic:: :endif
+open "a:"+nf$,a,n$,x,y
+DEB:: :CLS :I%=2
+KSTAT 3 :first
+PRINT "No du Pt 1 ";chr$(63);" ";:input m$
+if m$="" :goto fin:: :endif
+if m$="0"
+AT 1,1 :PRINT "X DU PT 1 ";CHR$(63); :INPUT X1
+PRINT "Y du PT 1 ";CHR$(63); :INPUT Y1
+goto d1:: :endif
+while not eof
+find (m$)
+if a.n$=m$
+x1=a.x :y1=a.y
+goto d1::
+ELSE NEXT
+endif :endwh
+if eof :print chr$(16); :print "  POINT INEXISTANT" :pause 20 :goto deb:: :endif
+D1:: :BEEP 50,200
+at 1,1 :print "X Pt 1 ->:";fix$(x1,3,-10)
+at 1,2 :print "Y Pt 1 ->:";fix$(y1,3,-10)
+AT 1,3 :PRINT "Dist 1 ->:"; :INPUT D1
+IF D1=0 :AT 1,3 :PRINT "Distance SP";CHR$(63);" "; :INPUT DSP
+AT 1,4 :PRINT "Zenithal :";CHR$(63);" "; :INPUT ZEN1
+ZEN1=300-ZEN1 :ZEN=ZEN1*PI/200
+D1=ABS(DSP*(COS(ZEN))) :ENDIF
+AT 1,3 :PRINT CHR$(22); :AT 1,3 :PRINT "Dist 1 ->:";FIX$(D1,3,-10)
+AT 1,4 :PRINT "Lect 1 ->:"; :INPUT L1
+LECT2:: :CLS
+KSTAT 3 :first
+PRINT "No du Pt ";I%;" ";chr$(63);" ";:input m$
+if m$="" :goto fin:: :endif
+if m$="0"
+AT 1,1 :PRINT "X DU ";I%;" Pt ";CHR$(63); :input X2
+IF X2=0 :GOTO FIN:: :ENDIF
+PRINT "Y DU ";I%;" Pt ";CHR$(63); :INPUT Y2
+goto d2:: :endif
+while not eof
+find (m$)
+if a.n$=m$
+x2=a.x :y2=a.y
+goto d2::
+ELSE NEXT
+endif :endwh
+if eof :print chr$(16); :print "  POINT INEXISTANT" :pause 20 :goto LECT2:: :endif
+D2::
+IF X2=X1 AND Y2=Y1 :BEEP 50,100 :PAUSE 15 :AT 6,3 :PRINT "IMPOSSIBLE" :BEEP 50,100 :PAUSE 20 :GOTO LECT2:: :ENDIF
+BEEP 50,200
+at 1,1 :print "X Pt ";I%;" ->:";fix$(x2,3,-10)
+at 1,2 :print "Y Pt ";I%;" ->:";fix$(Y2,3,-10)
+AT 1,3 :PRINT "Dist ";I%;" ->: ";:INPUT D2
+IF D2=0 :AT 1,3 :PRINT "Distance SP";CHR$(63);" "; :INPUT DSP
+AT 1,4 :PRINT "Zenithal :";CHR$(63);" "; :INPUT ZEN1
+ZEN1=300-ZEN1 :ZEN=ZEN1*PI/200
+D2=ABS(DSP*(COS(ZEN))) :ENDIF
+AT 1,3 :PRINT CHR$(22); :AT 1,3 :PRINT "Dist ";i%;" ->:"; :print FIX$(D2,3,-10)
+AT 1,4 :PRINT "Lect ";I%;" ->; "; :INPUT L2
+A=L2-L1 : IF A<0 :A=400+A :ENDIF
+A=A*PI/200
+DX=X1-X2 :DY=Y1-Y2 :IF DY=0 :DY=.000000000001 :ENDIF
+DC=SQR((DX*DX)+(DY*DY))
+G=ATAN(DX/DY) :GI=G/PI*200
+IF DY>0 :GI=GI+200 :ELSEIF DX>0 :GI=GI+400 :ENDIF
+GIS=GI*PI/200
+REM  TRI 1 Ang 2 Cotes adj
+Z=(200*PI/200)-A
+W=ATAN((D2-D1)*TAN(Z/2)/(D1+D2))
+C=(Z-2*W)/2
+B=(Z+2*W)/2
+D3=D2*SIN(A)/SIN(B)
+CLS :AT 1,1 :PRINT CHR$(16);
+AT 2,1 :PRINT "DISTANCE PTS VISES"
+AT 1,2 :PRINT "DIST. VRAIE ";FIX$(DC,3,-8)
+AT 1,3 :PRINT "DIST. CALC. ";FIX$(D3,3,-8)
+PAUSE 30
+AT 1,4 :PRINT CHR$(16);
+AT 3,4 :PRINT "ON CONTINUE O/N"
+CONT:: :KSTAT 1
+T%=GET
+IF T%=%N :GOTO LECT2::
+ELSEIF T%=%O :GOTO SUITE::
+
+ELSE :GOTO CONT:: :ENDIF
+SUITE::
+G1=GIS+B :G2=GIS-C+(200*PI/200)
+DX1=SIN(G1)*D1 :DY1=COS(G1)*D1
+X=X1+DX1 :Y=Y1+DY1
+DX2=SIN(G2)*D2 :DY2=COS(G2)*D2
+XX=X2+DX2 :YY=Y2+DY2
+V1=G1+(200*PI/200)-(L1*PI/200)
+V2=G2+(200*PI/200)-(L2*PI/200)
+VV1=V1/PI*200 :VV2=V2/PI*200
+IF VV1<0 :VV1=400+VV1 :ELSEIF VV1>400 :VV1=VV1-400 :ENDIF
+IF VV2<0 :VV2=400+VV2 :ELSEIF VV2>400 :VV2=VV2-400 :ENDIF
+V3=(VV1+VV2)/2
+CLS :PRINT CHR$(16);
+PRINT "X St  :";fix$(((x+xx)/2),3,-12)
+print "Y St  :";fix$(((y+yy)/2),3,-12)
+PRINT "Vo St :";FIX$(V3,3,-12)
+hPAUSE 30
+X1=X2 :Y1=Y2 :L1=L2 :D1=D2 :X2=Y2=D2=L2=A=0 :I%=I%+1
+AT 1,4 :PRINT CHR$(16); :AT 1,4 :PRINT "UNE AUTRE VISEE O/N"
+SUIT::
+T%=GET
+IF T%=%O :GOTO LECT2::
+ELSEIF T%=%N :GOTO FIN::
+ELSE :GOTO SUIT:: :ENDIF
+FIN:: :KSTAT 1 
+AT 1,4 :PRINT CHR$(16);
+AT 1,4 :PRINT "UN AUTRE CALCUL O/N"
+LAB::
+T%=GET
+IF T%=%O :GOTO DEB::
+ELSEIF T%=%N :CLOSE :topo:
+ELSE :GOTO LAB::
+ENDIF
+

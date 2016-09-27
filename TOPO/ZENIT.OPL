@@ -1,0 +1,10 @@
+ZENIT:
+LOCAL A(3)
+D:: :CLS
+AT 1,1 :PRINT "Zen. Drt : "; :INPUT A(1)
+IF A(1)=0 :RETURN :ENDIF
+PRINT "Zen. Inv : "; :INPUT A(2)
+A(3)=(400-A(2)+A(1))/2
+PRINT "Moyenne  :";FIX$(A(3),4,-9)
+GET
+GOTO D::

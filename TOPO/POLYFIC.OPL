@@ -1,0 +1,332 @@
+polyfic:
+local I%,j%,flag,xf,yf,zf,vf,x(50),y(50),dz(50),h1,h2,z(50),v0(50),d1,d2,dsp,az1(50),az2(50),pte1,pte2,zen1,zen2,dz1,dz2,d(50),e1,e2,e3,v,x,y,z,ex,ey,ez,ev,t%,dt,dta,id,sd,dgx,kl,nf$(8)
+global trouv,m$(5)
+if peekb($2099)<>255 :return :endif
+CLS :beep 50,200
+AT 1,1 :PRINT "CALCUL DE POLYGONALE"
+AT 2,2 :PRINT "ANTENNE OU FERMEE"
+AT 1,3 :PRINT "( 50 Stations Maxi.)"
+VIEW(4,"** NOTA: Les V0 indiques sont des V0 TRANSMIS.")
+deb:: :kstat 1
+dt=0 :dta=0 :x=0 :y=0 :z=0 :v=0
+cls :beep 50,200
+at 2,1 :print "** POLYGONALES  **"
+at 1,2 :print rept$("-",20)
+AT 2,3 :print "NOM DU FICHIER XY ";chr$(63)
+at 7,4 :input nf$
+if nf$="" :return :endif
+if not exist ("a:"+nf$) :beep 50,200 :at 3,4 :print "FICHIER INCONNU" :pause 20 :goto DEB:: :endif
+open "a:"+nf$,a,n$,x,y,z
+at 1,3 : print rept$(" ",40)
+at 4,3 :print "K. LONGUEUR ";chr$(63);" "; :input kl
+if kl=0 :goto fin:: :endif
+cls :beep 50,200
+at 2,1 :print "X Station  Depart"
+at 7,2 :print chr$(63);" "; :input x(1)
+if x(1)=0 :GOTO FIN:: :endif
+at 2,3 :print "Y  Station Depart"
+at 7,4 :print chr$(63);" "; :input Y(1)
+cls
+at 2,1 :print "Z  Station Depart"
+at 7,2 :print chr$(63);" "; :input Z(1)
+at 2,3 :print "V0 Station Depart"
+at 7,4 :print chr$(63);" "; :input V0(1)
+if v0(1)<0 :v0(1)=400+v0(1)
+elseif v0(1)>=400 :v0(1)=v0(1)-400
+endif
+h::
+I%=1
+at 1,3 :print rept$(" ",40);
+at 2,3 :print "Ht Station Depart"
+at 7,4 :print chr$(63);" "; :input h1
+al::
+cls :beep 50,200
+IF I%=1 :goto suit:: :endif 
+at 4,2 :print "ST.";I%;" SUR ST.";I%+1
+at 7,3 :print "Ok (O/N)";chr$(63)
+lab::
+t%=get
+if t%=%O :goto cght::
+elseif t%=%N :goto FERM::
+else goto lab:: 
+endif
+cght::
+H1=h2
+cls :beep 50,200
+at 3,2 :print "Hauteur =";fix$(h1,3,-6)
+at 7,3 :print "Ok (O/N)";chr$(63)
+lab2::
+t%=get
+if t%=%O :goto suit::
+elseif t%=%N :at 1,3 :print rept$(" ",20) :at 3,3 :print "Nouv. Ht. ";chr$(63); :input h1 :goto  suit::
+else goto lab2:: 
+endif
+suit:: :cls :BEEP 50,200
+I%=I%+1
+IF I%=50 :goto ferm:: :endif
+dist1::
+at 4,1 :print "ST.";I%-1;" sur ST.";I%
+at 1,2 :PRINT "Dist. si SP 0 ";chr$(63);" "; :input d1
+if d1=0 :flag=1
+at 1,2 :print rept$(" ",20)
+at 1,2 :print "Dist. SP.";chr$(63);" "; :input dsp
+at 1,3 :print "Zenithal ";chr$(63);" "; :input zen1
+if zen1<200 :zen1=400-zen1 :endif
+zen1=zen1-300
+zen1=zen1*pi/200
+d1=abs(dsp*(cos(zen1)))
+endif
+d1=d1*kl
+cls :beep 50,200
+at 4,1 :print "ST.";I%-1;" sur ST.";I%
+at 1,2 :print "Distance : ";fix$(d1,3,-9)
+if flag=1 :flag=0 :goto ht:: :endif
+at 1,3 :print "Zenithal ";chr$(63);" "; :input zen1
+if zen1<200 :zen1=400-zen1 :endif
+zen1=zen1-300
+zen1=zen1*pi/200
+ht::
+at 1,3 :print "Ht. Sig.(Si DZ 99)";chr$(63); :input pte1
+if pte1=99 :at 1,3 :print rept$(" ",20); :beep 50,200 :at 1,3 :print "Denivele ";chr$(63);" "; :input dz1 :endif
+at 1,4 :print "Azimuth Aller ";chr$(63);" "; :input az1(I%)
+ret::
+cls :beep 50,200
+at 1,1 :print "HT St.";I%;" : ";chr$(63);" "; :input h2
+cls :beep 50,200
+at 4,1 :print "ST.";I%;" sur ST.";I%-1
+at 1,2 :PRINT "Dist si SP 0 ";chr$(63);" "; :input d2
+if d2=0 :flag=1
+at 1,2 :print rept$(" ",20)
+at 1,2 :print "Dist. SP ";chr$(63);" "; :input dsp
+at 1,3 :print "Zenithal ";chr$(63);" "; :input zen2
+if zen2<200 :zen2=400-zen2 :endif
+zen2=zen2-300
+zen2=zen2*pi/200
+d2=abs(dsp*(cos(zen2)))
+endif
+d2=d2*kl
+cls :beep 50,200
+at 4,1 :print "ST.";I%;" sur ST.";I%-1
+at 1,2 :print "Distance : ";fix$(d2,3,-9)
+if flag=1 :flag=0 :goto ht2:: :endif
+at 1,3 :print "Zenithal ";chr$(63);" "; :input zen2
+if zen2<200 :zen2=400-zen2 :endif
+zen2=zen2-300
+zen2=zen2*pi/200
+ht2::
+at 1,3 :print "Ht. Sig.(Si DZ 99)";chr$(63); :input pte2
+if pte2=99 :at 1,3 :print rept$(" ",20); :beep 50,200 :at 1,3 :print "Denivele ";chr$(63);" "; :input dz2 :endif
+at 1,4 :print "Azimuth Retour ";chr$(63);" "; :input az2(I%)
+if pte1=99 :goto pt2:: :endif
+DZ1=(d1*tan(zen1)+h1-pte1)+.0683*((d1/1000)*(d1/1000))
+pt2::
+if pte2=99 :goto moy:: :endif
+DZ2=(d2*tan(zen2)+h2-pte2)+.0683*((d2/1000)*(d2/1000))
+moy::
+cls :beep 50,200
+AT 1,1 :print "Dist. Al.:";fix$(d1,3,-10)
+AT 1,2 :print "Dist. Re.:";fix$(d2,3,-10)
+at 1,3 :print "DZ Aller.:";fix$(dz1,3,-10)
+at 1,4 :print "DZ Retour:";fix$(dz2,3,-10)
+get
+d(I%)=(d1+d2)/2
+if (dz1<0 and dz2>0) or (dz1>0 and dz2<0) :dz(I%)=(dz1-dz2)/2
+elseif (dz1<0 and dz2<0) or (dz1>0 and dz2>0) :dz(I%)=(dz1+dz2)/2
+endif
+cls :beep 50,200
+at 1,1 :print "Dist. Moy:";fix$(d(I%),4,-10)
+at 1,2 :print "DZ moyen :";fix$(dz(I%),4,-10)
+at 1,3 :print "Lect. AV.:";fix$(az1(i%),4,-10)
+at 1,4 :print "Lect. AR.:";fix$(az2(i%),4,-10)
+oino:: :pause 30 :beep 50,200
+at 1,4 :print "Ok (O/N) ";chr$(63)
+t%=GET
+if t%=%N :beep 50,200 :at 1,4 :print "   On recommence    "; :PAUSE 20 :cls :goto dist1::
+elseif t%<>%O :beep 50,200 :: :goto oino::
+endif
+dt=dt+d(I%)
+id=1/d(I%)
+dta=dta+id
+goto al::
+ferm::
+beep 50,200 :cls
+at 1,1 :print rept$("-",20)
+at 1,2 :print "Distance Cheminement"
+at 4,3 :print fix$(dt,3,-10)
+at 1,4 :print rept$("-",20)
+get
+label:: :cls :beep 50,200
+at 2,1 :print "** POLYGONALES  **"
+at 1,2 :print rept$("-",20)
+t%=menun(2,"ANTENNE,FERM/ST1,FERMEE")
+if t%=1 :xf=999 :yf=999 :goto dg:: 
+elseif t%=2 :xf=x(1) :yf=y(1) :zf=z(1) :vf=v0(1) :goto dg::
+elseif t%=3 :goto xf:: 
+else goto label::
+endif
+xf:: :cls :beep 50,200
+at 1,1 :print "X St. Ferm.: "; :input xF
+if xf=0 :goto label:: :endif 
+at 1,2 :print "Y St. Ferm.: "; :input Yf
+at 1,3 :print "Z St. Ferm.: "; :input Zf
+at 1,4 :print "V0 St.Ferm.: "; :input Vf
+if vf<0 :vf=400+vf
+elseif vf>=400 :vf=vf-400
+endif
+PAUSE 10 
+at 1,4 :print rept$(" ",20)
+at 7,4 :print "Ok (O/N)";chr$(63)
+stf:: :beep 50,200
+t%=GET
+if t%=%O :goto dg::
+elseif t%=%N :goto label::
+else goto stf:: 
+endif
+dg::
+cls :beep 50,200
+at 2,1 :print "** POLYGONALES  **"
+at 1,2 :print rept$("-",20)
+at 1,3 :print "PATIENCE JE CALCULE."
+at 1,4 :print rept$("-",20)
+if (xf<>999 and yf<>999) :goto comp:: :endif
+EX=0 :ey=0 :ez=0 :ev=0 :e1=0 :e2=0 :e3=0 
+goto comp2::
+comp::
+j%=2 
+while j%<=I%
+v=v+az1(j%)-az2(j%)-200
+if v<0 :v=400+v
+elseif v>400 :v=v-400
+endif
+z=z+dz(j%)
+j%=j%+1
+endwh
+v=v0(1)+v
+if v<0 :v=400+v
+elseif v>400 :v=v-400
+endif
+z=z(1)+z
+EV=v-vf
+if ev<0 :ev=400+ev
+elseif ev>400 :ev=ev-400
+endif
+if (ev>399.9) AND (EV<400) :ev=ev-400 :endif
+ez=z-zf
+e1=ev/(2*dta)
+comp2::
+j%=2
+while j%<=i%
+az1(j%)=V0(j%-1)+az1(j%)-e1/d(j%)
+if az1(j%)<0 :az1(j%)=400+az1(j%)
+elseif az1(j%)>400 :az1(j%)=az1(j%)-400
+endif
+v0(j%)=az1(j%)-az2(j%)-200-e1/d(j%)
+if v0(j%)<0 :v0(j%)=400+v0(j%)
+elseif v0(j%)>=400 :v0(j%)=v0(j%)-400
+endif
+j%=j%+1
+endwh
+if (xf=999) and (yf=999) :goto af:: :endif 
+j%=2  
+while j%<=i%
+x=x+d(j%)*sin(az1(j%)*pi/200)
+y=y+d(j%)*cos(az1(j%)*pi/200)
+j%=j%+1
+endwh
+X=x+x(1)
+y=y+y(1)
+ex=x-xf
+ey=y-yf
+cls :beep 50,200
+at 1,1 :print"Ecart X =",fix$(ex,4,-10)
+at 1,2 :print"Ecart Y =",fix$(ey,4,-10)
+at 1,3 :print"Ecart Z =",fix$(ez,4,-10)
+at 1,4 :print"Ecart V0=",fix$(ev,4,-10)
+get
+E1=ex/dt
+e2=ey/dt
+e3=ez/dt
+af::
+cls :beep 50,200
+at 1,1 :print "X St.1 :",fix$(x(1),3,-10)
+at 1,2 :print "Y St.1 :",fix$(y(1),3,-10)
+at 1,3 :print "Z St.1 :",fix$(z(1),3,-10)
+at 1,4 :print "V0 St.1: ";fix$(v0(1),4,-10)
+get
+if dgx=1 : goto calc:: :endif
+stok::
+trouv=0 :kstat 1
+AT 1,4 :print "ENREG. DE CE PT O/N";chr$(63); 
+t%=get
+if t%=%O :KSTAT 3 :at 1,4 :print "SOUS QUEL No :";chr$(63); :input m$
+testpt:
+if trouv<>0 :beep 50,100 :at 1,4 :print "POINT DEJA EXISTANT" :pause 20 :goto stok:: :endif
+if m$="" :goto stok:: :endif
+a.n$=m$ :a.x=x(1) :a.y=y(1) :a.z=z(1) :append :at 1,4 :print rept$(" ",20); :at 1,4 :BEEP 50,200 :print "ENREG. ST. ";a.n$ :pause 20 :goto calc:: :elseif t%=%N :goto calc::
+else :goto stok:: 
+endif
+calc::
+j%=2
+while j%<=i%
+if dgx=1 :goto list:: :endif
+x=sin(az1(j%)*pi/200)
+y=cos(az1(j%)*pi/200)
+z(j%)=z(j%-1)+dz(j%)-e3*d(j%)
+x(j%)=x(j%-1)+d(j%)*x-e1*d(j%)
+Y(j%)=Y(j%-1)+d(j%)*y-e2*d(j%)
+if v0(j%)<0 :v0(j%)=400+v0(j%)
+elseif v0(j%)>=400 :v0(j%)=v0(j%)-400
+endif
+list::
+cls :beep 50,200
+at 1,1:print "X St.";j%;" :",fix$(x(j%),3,-10)
+AT 1,2 :print "Y St.";j%;" :",fix$(y(j%),3,-10)
+at 1,3 :print "Z St.";j%;" :",fix$(z(j%),3,-10)
+at 1,4 :print "V0 St.";j%;":",fix$(v0(j%),4,-10)
+get
+if dgx=1 :goto more:: :endif
+stok2:: :trouv=0 :kstat 1
+AT 1,4 :print "ENREG DE CE PT O/N";chr$(63); 
+t%=get
+if t%=%O :KSTAT 3 :at 1,4 :print "SOUS QUEL No :";chr$(63); :input m$
+testpt:
+if trouv<>0 :beep 50,100 :at 1,4 :print "POINT DEJA EXISTANT" :pause 20 :goto stok2:: :endif
+if m$="" :goto stok2:: :endif
+a.n$=m$ :a.x=x(j%) :a.y=y(j%) :a.z=z(j%) :append :at 1,4 :print rept$(" ",20); :at 1,4 :BEEP 50,200 :print "ENREG. ST. ";a.n$ :pause 20 :goto more:: :elseif t%=%N :goto more::
+else :goto stok2:: 
+endif
+more::
+j%=j%+1
+endwh
+fin:: dgx=0
+cls :beep 50,200
+at 2,1 :print "** POLYGONALES  **"
+at 1,2 :print rept$("-",20)
+T%=menun(2,"EDITION,AUTRCALC,NOUVEAU,QUITTER")
+if T%=0 or T%=4 :return
+elseif t%=1 :dgx=1 :goto af:: 
+elseif t%=2 :goto REp::
+elseif t%=3 :goto deb::
+endif
+rep::
+cls :beep 50,200
+at 3,2 :print "Station Depart ";chr$(63)
+At 5,3 :print "De 1 a ";I%
+at 8,4 :print chr$(63); :input sd
+if sd=0 :goto fin::
+ELSEif sd<1 or sd>I% :goto rep::
+endif
+
+cls :beep 50,200
+at 1,1 :print "X St. ";sd;":";fix$(x(sd),3,-11)
+at 1,2 :print "Y St. ";sd;":";fix$(y(sd),3,-11)
+at 1,3 :print "Z St. ";sd;":";fix$(z(sd),3,-11)
+at 1,4 :print "V0 St.";sd;":";fix$(v0(sd),4,-11)
+get
+beep 50,200 :at 1,4 :print rept$(" ",20) :at 7,4 :print "Ok (O/N)";chr$(63)
+lab3::
+t%=get
+if t%=%O :DT=0 :dta=0 :x=0 :y=0 :z=0 :v=0 :x(1)=x(sd) :y(1)=y(sd) :z(1)=z(sd) :v0(1)=v0(sd) :goto H::
+elseif t%=%N :goto rep::
+else goto lab3:: 
+endif

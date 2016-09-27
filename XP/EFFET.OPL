@@ -1,0 +1,1 @@
+EFFET:LOCAL B$(1),A$(2)A$=CHR$(255)+" "B$=CHR$(255)A:: AT 1,1 :PRINT A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;AT 1,1 :PRINT " "+A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;A$;B$; :pause 0.5GOTO A::

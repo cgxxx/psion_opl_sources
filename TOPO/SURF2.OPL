@@ -1,0 +1,119 @@
+SURF2:
+LOCAL A,F%,X,Y,X1,Y1,X2,Y2,DX,DY,DIST,SURF,FLAG,T%,CH$(1),NF$(8),M$(8),P$(8),P1$(8),G,g0,G1,G2
+IF PEEKB($2099)<>255 :RETURN :ENDIF
+IF NOT EXIST("B:BB") :RETURN :ENDIF
+CLS :BEEP 50,200 :AT 1,2 :PRINT "    N  O  T  A" :PAUSE 40 :CLS :BEEP 50,200 :AT 1,1 :PRINT "Ne pas introduire le Point de fermeture Mais 0 a l";chr$(39);"X si Man.Ou au No si Fichier."
+get
+DEB:: :kstat 1 :CLS :SURF=0 :FLAG=0 :F%=1 :BEEP 50,200
+AT 1,1 :PRINT "** SURFACE - X/Y **"
+AT 1,2 :PRINT REPT$("-",20);
+AT 1,3 :PRINT "MANUELLE OU FICHIER"
+AT 1,4 :AT 1,4 :PRINT"VOTRE CHOIX (M/F)";CHR$(63); :INPUT CH$
+IF CH$="F" :AT 1,3 :PRINT REPT$(" ",20); :AT 2,3 :PRINT "NOM DU FICHIER XY ";CHR$(63)
+AT 1,4 :PRINT REPT$(" ",20); :AT 7,4 :INPUT NF$
+IF NF$="" :TOPO: :ENDIF
+IF NOT EXIST("A:"+NF$) :BEEP 50,200 :AT 3,4 :PRINT "FICHIER INCONNU" :PAUSE 20 :GOTO DEB:: :ENDIF
+OPEN "A:"+NF$,A,N$,X,Y
+ENDIF
+AT 1,1 :PRINT "** SURFACE - X/Y **"
+AT 1,2 :PRINT REPT$("-",20);
+IF CH$="F" :GOTO F1::
+ELSEIF CH$="M" :GOTO MAN1::
+ELSE :RETURN :ENDIF
+F1::
+FIRST :KSTAT 3
+AT 1,4 :PRINT REPT$(" ",20);
+AT 1,3 :PRINT "No Pt Depart:";chr$(63); :input M$
+IF M$="" :GOTO LAB:: :ENDIF
+IF ERR :STOP :ENDIF
+WHILE NOT EOF
+FIND(M$)
+IF A.N$=M$
+X1=A.X :Y1=A.Y :P$=A.N$
+AT 1,3 :PRINT "X Pt Dep.:";FIX$(X1,3,-10)
+AT 1,4 :PRINT "Y Pt Dep.:";fix$(Y1,3,-10)
+BEEP 50,200
+PAUSE 50
+X=X1 :Y=Y1 :P1$=P$
+GOTO SUIT::
+ELSE NEXT :ENDIF
+ENDWH
+IF EOF :BEEP 50,200 :PRINT "  POINT INEXISTANT" :PAUSE 20 :GOTO F1:: :ENDIF
+SUIT::
+CLS :FIRST :M$=""
+AT 1,1 :PRINT REPT$("-",20);
+AT 4,1 :PRINT " Dern. Pt :";P$;" ";
+AT 1,2 :PRINT "No du Pt Suiv.:";chr$(63); :input M$
+IF M$="0" :GOTO PTFIN:: :ENDIF
+WHILE NOT EOF
+FIND(M$)
+IF A.N$=M$
+X2=A.X :Y2=A.Y :P$=A.N$
+AT 1,2 :PRINT "X Pt Suiv:";FIX$(X2,3,-10)
+AT 1,3 :PRINT "Y Pt Suiv:";fix$(Y2,3,-10)
+BEEP 50,200
+GOTO CAL::
+ELSE NEXT :ENDIF
+ENDWH
+IF EOF :BEEP 50,200 :PRINT "  POINT INEXISTANT" :PAUSE 20 :GOTO SUIT:: :ENDIF
+MAN1::
+AT 1,3 :PRINT REPT$(" ",40);
+AT 1,3 :PRINT "X Pt Dep.";CHR$(63);" "; :INPUT X1
+at 1,4 :print "Y Pt Dep.";CHR$(63);" "; :INPUT Y1
+X=X1 :Y=Y1
+PTSUIV:: :CLS
+AT 1,1 :PRINT REPT$("-",20);
+AT 1,2 :PRINT "X Pt Suiv";chr$(63);" "; :INPUT X2
+IF X2=0
+PTFIN::
+IF CH$="F" :AT 1,1 :PRINT REPT$("-",20) :AT 5,1 :PRINT " Pt Fin :";p1$;" "; :ENDIF
+X2=X1 :Y2=Y1 :FLAG=1 :AT 1,2 :PRINT "X Pt Fin :";fix$(x2,3,-10) :at 1,3 :print "Y Pt Fin :";fix$(y2,3,-10) :GOTO CAL::
+ENDIF
+AT 1,3 :PRINT "Y Pt Suiv";chr$(63);" "; :INPUT Y2
+CAL::
+PAUSE 20
+F%=F%+1
+DX=X-X2 :DY=Y-Y2
+IF DX=0 AND DY=0 AND CH$="M" :BEEP 50,200 :PAUSE 20 :BEEP 50,200 :AT 4,4 :PRINT "POINT CONFONDU" :PAUSE 20 :GOTO PTSUIV:: :ENDIF
+IF DX=0 AND DY=0 AND CH$="F" :BEEP 50,200 :PAUSE 20 :BEEP 50,200 :AT 4,4 :PRINT "POINT CONFONDU" :PAUSE 20 :GOTO SUIT:: :ENDIF
+SURF=SURF+(X+X2)*(Y-Y2)
+IF DY=0 :dy=.0000000000000001
+ENDIF
+DIST=SQR(ABS((DX*DX)+(DY*DY)))
+G1=atan(dX/dy)
+G=G1/pi*200
+if dy>0 :G=G+200
+ELSEIF DX>0 :G=G+400
+endif
+if f%=2 :g0=G :endif
+BEEP 50,200 :AT 1,2 :PRINT "Distance :";fix$(DIST,3,-10)
+AT 1,3 :print rept$(" ",20)
+at 1,3 :print "Gisement :";fix$(G,3,-10)
+if F%>2 
+A=(G2+200-G)
+if A<0 :A=A+400
+elseif A>400 :A=A-400
+ENDIF
+AT 1,4 :print rept$(" ",20)
+at 1,4 :print "Angle    :";fix$(A,3,-10)
+endif
+PAUSE 80
+X=X2 :Y=Y2 :G2=G
+if flag=1 :a=(g2+200-g0) :endif
+if A<0 :A=A+400
+elseif A>400 :A=A-400
+ENDIF
+IF FLAG=1 :BEEP 50,200 :print "Angle 1 PT.:";fix$(a,3,-8); :pause 80
+CLS :BEEP 50,200 :AT 1,1 :PRINT "** SURFACE - X/Y **" :AT 1,2 :PRINT REPT$("-",20); :AT 1,3 :PRINT "SURFACE : ";FIX$(ABS(SURF/2),2,-8) :AT 1,4 :PRINT REPT$("-",20); :GET :GOTO LAB::
+ELSEIF FLAG<>1 AND CH$="M":GOTO PTSUIV::
+ELSEIF FLAG<>1 AND CH$="F" :GOTO SUIT::
+ENDIF
+LAB:: :KSTAT 1
+IF CH$="F" :CLOSE :ENDIF
+cls :BEEP 50,200 :AT 1,1 :PRINT "** SURFACE - X/Y **" :AT 1,2 :PRINT "--------------------" :AT 1,3 :PRINT "UN AUTRE CALCUL O/N" :AT 1,4 :PRINT REPT$("-",20);
+ON::
+T%=GET
+IF T%=%O :GOTO DEB::
+ELSEIF T%=%N :TOPO:
+ELSE :GOTO ON::
+ENDIF

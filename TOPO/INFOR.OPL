@@ -1,0 +1,6 @@
+INFOR:
+CLS
+AT 1,1 :PRINT REPT$("-",20)
+AT 1,2 :PRINT "Calculs Topo - V 3.2"
+AT 4,3 :PRINT CHR$(184);" Fevrier 1991 "
+VIEW(4,"** GUILLOUX Daniel ***  06100 - Nice  *** Tel. 92.09.11.14 **")

@@ -1,0 +1,54 @@
+IMPXY:
+LOcAL F,M%,NF$(8),m$(8)
+IF PEEKB($2099)<>255
+RETURN :ENDIF
+deb:: :cls
+kstat 1
+AT 1,1 :PRINT "  IMPRESSION TOPO"
+AT 1,2 :PRINT REPT$("-",20)
+AT 1,3 :PRINT "NOM DU FICHIER XY:";CHR$(63); 
+AT 7,4 :INPUT NF$
+IF NF$="" :RETURN :ENDIF
+IF NOT EXIST ("A:"+NF$) :BEEP 50,200 :AT 1,3 :PRINT "  FICHIER INCONNU  ":PAUSE 50 :goto deb::
+ELSE
+OPEN "A:"+NF$,A,N$,X$,Y$,Z$
+ENDIF
+PT::
+KSTAT 3
+CLS
+AT 1,1 :PRINT "A Partir du Pt:";CHR$(63); :INPUT m$
+if m$="" : GOTO deb:: :endif
+FIRST
+WHILE NOT EOF
+find(m$)
+IF M$=A.N$ :GOTO I1::
+ELSEIF M$<>A.N$ :NEXT
+ENDIF
+ENDWH
+BEEP 50,200 :AT 1,2 :PRINT "  POINT INEXISTANT" :PAUSE 50 :GOTO PT::
+I1:: :CLS 
+lPRINT "No : ";A.N$ :lPRINT "X  : ";A.X$ :lPRINT "Y  : ";A.Y$
+if a.z$<>"" :lprint "Z  : ";a.z$ :endif
+lPRINT 
+WHILE NOT EOF
+NEXT
+CLS
+AT 1,2 :PRINT "IMPRESSION EN COURS"
+AT 1,3 :PRINT "DU PT : ";A.N$
+IF A.N$<>""
+lPRINT "NO : ";A.N$ :lPRINT "X  : ";A.X$ :lPRINT "Y  : ";A.Y$
+if a.z$<>"" :lprint "Z  : ";a.z$ :endif 
+LPRINT
+ENDIF
+ENDWH
+FIN::
+CLS
+PRINT "  IMPRESSION TOPO"
+PRINT REPT$("-",20)
+PRINT "UN AUTRE LISTING O/N"
+D:: :KSTAT 1
+M%=GET
+IF M%=%O :GOTO PT::
+ELSEIF M%=%N :RETURN
+ELSE GOTO D::
+ENDIF
